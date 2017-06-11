@@ -1,3 +1,5 @@
+-- 07.2015 - 5 задача
+
 type Trip = (String, Integer, Float)
 type Tour = [Trip]
 
