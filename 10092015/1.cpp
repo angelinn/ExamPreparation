@@ -28,3 +28,25 @@ void selectionSort(int* nums, int N)
         }
     }
 }
+
+// 1
+int somethingElse()
+{
+    int a = 0;
+    int b = 15;
+    int result = -1;
+
+    if (b < 10 && b / a < 10)
+        result = 0;
+    else 
+        result = 1;
+
+    return result;
+}
+
+// 00000110
+// |
+// 00001011
+// ---------
+// 00001111
+// 15

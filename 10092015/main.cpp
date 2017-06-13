@@ -15,4 +15,6 @@ int main()
         printf ("%d, ", b[i]);
     
     printf("\n");
+
+    printf("%d\n", somethingElse());
 }
