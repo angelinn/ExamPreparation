@@ -60,6 +60,12 @@ protected:
 class Knight : public GamePlayer
 {
 public:
+	Knight(Point point)
+	{
+		currentPosition = point;
+	}
+
+public:
 	virtual Point* allowedMoves()
 	{
 		Point* moves = new Point[N];
@@ -123,49 +129,49 @@ public:
 public:
 	virtual Point* allowedMoves()
 	{
-        return allowedMovesRecursive(currentPosition);
+		return allowedMovesRecursive(currentPosition);
 	}
 
 	virtual const char* getTag() { return "SeaMonster"; }
 
 private:
-    Point* allowedMovesRecursive(const Point& start)
-    {
+	Point* allowedMovesRecursive(const Point& start)
+	{
 		Point* moves = new Point[N];
 		size_t currentMove = 0;
 
 		Point* nearPositions = getNearbyPositions(start);
-        for (int i = currentPosition.x - 1; i >= 0; --i)
-        {
-            if (field[i][currentPosition.y] != WATER)
-                break;
+		for (int i = currentPosition.x - 1; i >= 0; --i)
+		{
+			if (field[i][currentPosition.y] != WATER)
+				break;
 
-            moves[currentMove++] = Point(i, currentPosition.y);
-        }
+			moves[currentMove++] = Point(i, currentPosition.y);
+		}
 
-        for (int i = currentPosition.x + 1; i < N; ++i)
-        {            
-            if (field[i][currentPosition.y] != WATER)
-                break;
-            moves[currentMove++] = Point(i, currentPosition.y);
-        }
+		for (int i = currentPosition.x + 1; i < N; ++i)
+		{
+			if (field[i][currentPosition.y] != WATER)
+				break;
+			moves[currentMove++] = Point(i, currentPosition.y);
+		}
 
-        for (int i = currentPosition.y - 1; i >= 0; --i)
-        {
-            if (field[currentPosition.x][i] != WATER)
-                break;
-            moves[currentMove++] = Point(currentPosition.x, i);
-        }
+		for (int i = currentPosition.y - 1; i >= 0; --i)
+		{
+			if (field[currentPosition.x][i] != WATER)
+				break;
+			moves[currentMove++] = Point(currentPosition.x, i);
+		}
 
-        for (int i = currentPosition.y + 1; i < N; ++i)
-        {
-            if (field[currentPosition.x][i] != WATER)
-                break;
-            moves[currentMove++] = Point(currentPosition.x, i);
-        }
+		for (int i = currentPosition.y + 1; i < N; ++i)
+		{
+			if (field[currentPosition.x][i] != WATER)
+				break;
+			moves[currentMove++] = Point(currentPosition.x, i);
+		}
 
 		return moves;
-    }
+	}
 
 	bool isValidPosition(int x, int y)
 	{
@@ -178,22 +184,21 @@ void allMoves(GamePlayer** players, size_t size)
 	for (size_t i = 0; i < size; ++i)
 	{
 		Point* allowedMoves = players[i]->allowedMoves();
-		for (int i = 0; i < N; ++i)
+		for (int k = 0; k < N; ++k)
 		{
-			if (allowedMoves[i].x == -1)
+			if (allowedMoves[k].x == -1)
 				break;
 
-			Point* nearPositions = getNearbyPositions(players[i]->getPosition());
+			Point* nearPositions = getNearbyPositions({allowedMoves[k].x, allowedMoves[k].y});
 			for (int j = 0; j < N; ++j)
 			{
 				if (nearPositions[j].x == -1)
 					break;
 
-				if (isalpha(field[nearPositions[j].x][nearPositions[j].y]))
-					printf("%s (%d, %d) -> (%d, %d)\n", players[i]->getTag(), players[i]->getPosition().x, players[i]->getPosition().y, nearPositions[j].x, nearPositions[j].y);
+				if (isalpha(field[nearPositions[j].x][nearPositions[j].y]) && field[nearPositions[j].x][nearPositions[j].y] != players[i]->getTag()[0])
+					printf("%s (%d, %d) -> (%d, %d)\n", players[i]->getTag(), players[i]->getPosition().x, players[i]->getPosition().y, allowedMoves[k].x, allowedMoves[k].y);
 			}
 
-			++allowedMoves;
 			delete[] nearPositions;
 		}
 		delete[] allowedMoves;
