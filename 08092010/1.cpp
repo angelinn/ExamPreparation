@@ -13,6 +13,7 @@ public:
     }
 
 public:
+    virtual Trip* clone() const = 0;
     virtual const char* getDescription() = 0;
     virtual ~Trip()
     {
@@ -69,7 +70,10 @@ public:
     BusTrip& operator=(const BusTrip& other)
     {
         if (this != &other)
+        {
+            Trip::copyFrom(other);
             copyFrom(other);
+        }
 
         return *this;
     }
@@ -84,6 +88,11 @@ public:
     void setDeliverer(const char* newDeliverer) { setString(deliverer, newDeliverer); }
 
 public:
+    virtual BusTrip* clone() const
+    {
+        return new BusTrip(*this);
+    }
+
     virtual const char* getDescription()
     {
         description = new char[512];
@@ -114,6 +123,11 @@ public:
     }
     
 public:
+    virtual PlaneFlight* clone() const
+    {
+        return new PlaneFlight(*this);
+    }
+
     virtual const char* getDescription()
     {
         description = new char[512];
@@ -128,7 +142,43 @@ private:
 class Tour : public Trip
 {
 public:
+    Tour() : trips(nullptr)
+    {   }
+
+    Tour(const Tour& other) : Trip(other), trips(nullptr)
+    {
+        copyFrom(other);
+    }
+
+    Tour& operator=(const Tour& other)
+    {
+        if (this != &other)
+        {
+            Trip::copyFrom(other);
+            copyFrom(other);
+        }
+
+        return *this;
+    }
+
+    ~Tour()
+    {
+        for (size_t i = 0; i < tripCount; ++i)
+            delete trips[i];
+
+        delete[] trips;
+    }
+
+public:
     Trip** getTrips() { return trips ;}
+    void setTrips(const Trip** newTrips, size_t size)
+    {
+        tripCount = size;
+        trips = new Trip*[size];
+
+        for (size_t i = 0; i < size; ++i)
+            trips[i] = newTrips[i]->clone();
+    }
 
 public:
     virtual const char* getDescription()
@@ -145,6 +195,17 @@ public:
         return description;
     }
 
+private:
+    void copyFrom(const Tour& other)
+    {
+        Trip::copyFrom(other);
+
+        tripCount = other.tripCount; 
+        for (size_t i = 0; i < other.tripCount; ++i)
+            trips[i] = other.trips[i]->clone();   
+    }
+
+private:
     Trip** trips;
     size_t tripCount;
 };
