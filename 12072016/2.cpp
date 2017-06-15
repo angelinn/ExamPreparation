@@ -8,7 +8,6 @@ struct Node
 
 	Node* next;
 	Node* children;
-	size_t count;
 };
 
 void buildNode(FILE* fileHandle, Node*& root)
@@ -37,7 +36,7 @@ void buildNode(FILE* fileHandle, Node*& root)
 			
 			number[currentSize] = '\0';
 
-			Node* current = new Node{ atoi(number), nullptr, nullptr, 0 };
+			Node* current = new Node{ atoi(number), nullptr, nullptr };
 
 			if (!root)
 				root = current;
