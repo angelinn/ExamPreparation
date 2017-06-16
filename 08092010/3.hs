@@ -1,12 +1,15 @@
--- 07.2015 - 5 задача
-
 type Trip = (String, Integer, Float)
 type Tour = [Trip]
 
 discount :: Tour -> Integer -> Tour
-discount tour len = map (apply len) tour
+discount tour len = [ if k > len then (d, k, p / 10) else (d, k, p) | (d, k, p) <- tour ]
 
-apply :: Integer -> Trip -> Trip
-apply l (x, y, z)
- | y > l = (x, y, z - z / 10)
- | otherwise = (x, y, z)
+shortenTour :: Tour -> String -> String -> Trip -> Tour
+shortenTour ((d, k, p) : rest) from to trip
+    | d == from = extractTour rest to trip
+    | otherwise = (d, k, p) : shortenTour rest from to trip
+
+extractTour :: Tour -> String -> Trip -> Tour
+extractTour ((d, k, p) : rest) to trip
+    | d == to   = trip : rest
+    | otherwise = extractTour rest to trip
