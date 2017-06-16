@@ -171,7 +171,7 @@ public:
 
 public:
     Trip** getTrips() { return trips ;}
-    void setTrips(const Trip** newTrips, size_t size)
+    void setTrips(Trip** newTrips, size_t size)
     {
         tripCount = size;
         trips = new Trip*[size];
@@ -183,10 +183,10 @@ public:
 public:
     Tour sliceTour(char const* start, char const* end)
     {
-        int startIndex = -1
+        int startIndex = -1;
         for (int i = 0; i < tripCount; ++i)
         {
-            if (strcmp(trips->[i]->getDestination(), start) == 0)
+            if (strcmp(trips[i]->getDestination(), start) == 0)
             {
                 startIndex = i + 1;
                 break;
@@ -217,10 +217,29 @@ public:
 
     void priceReport()
     {
+        for (int i = 0; i < tripCount; ++i)
+        {
+            int maxIndex = i;
+            for (int j = i + 1; j < tripCount; ++j)
+            {
+                if (trips[maxIndex]->getPrice() / trips[maxIndex]->getDistance() < trips[j]->getPrice() / trips[j]->getDistance())
+                    maxIndex = j;
+            }
 
+            Trip* temporary = trips[i];
+            trips[i] = trips[maxIndex];
+            trips[maxIndex] = trips[i];
+            
+            printf("[%d] - %s\n", i, trips[i]->getDescription());
+        }
     }
 
 public:
+    virtual Tour* clone() const
+    {
+        return new Tour(*this);
+    }
+
     virtual const char* getDescription()
     {
         for (int i = 0; i < tripCount; ++i)
