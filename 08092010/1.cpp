@@ -181,6 +181,46 @@ public:
     }
 
 public:
+    Tour sliceTour(char const* start, char const* end)
+    {
+        int startIndex = -1
+        for (int i = 0; i < tripCount; ++i)
+        {
+            if (strcmp(trips->[i]->getDestination(), start) == 0)
+            {
+                startIndex = i + 1;
+                break;
+            }
+        }
+
+        Tour newTour;
+
+        if (startIndex == -1)
+            return newTour;
+
+        int endIndex = -1;
+        for (int j = startIndex; j < tripCount; ++j)
+        {
+            if (strcmp(trips[j]->getDestination(), end) == 0)
+            {
+                endIndex = j;
+                break;
+            }
+        }
+
+        if (endIndex == -1)
+            return newTour;
+        
+        newTour.setTrips(trips + startIndex, endIndex - startIndex);
+        return newTour;
+    }
+
+    void priceReport()
+    {
+
+    }
+
+public:
     virtual const char* getDescription()
     {
         for (int i = 0; i < tripCount; ++i)
