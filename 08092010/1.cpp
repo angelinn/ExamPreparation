@@ -4,41 +4,44 @@
 class Trip
 {
 public:
-    Trip() : destination(nullptr), distance(0), price(0)
-    {  }
+	Trip() : destination(nullptr), description(nullptr), distance(0), price(0)
+	{  }
 
-    Trip(const Trip& other) : destination(nullptr), distance(0), price(0)
-    {
-        copyFrom(other);
-    }
-
-public:
-    virtual Trip* clone() const = 0;
-    virtual const char* getDescription() = 0;
-    virtual ~Trip()
-    {
-        delete[] description;
-        delete[] destination;
-    }
+	Trip(const Trip& other) : destination(nullptr), description(nullptr), distance(0), price(0)
+	{
+		copyFrom(other);
+	}
 
 public:
-    const char* getDescription() const { return description; }
-    const char* getDestination() const { return destination; }
-    float getPrice() const { return price; }
-    int getDistance() const { return distance; }
+	virtual Trip* clone() const = 0;
+	virtual const char* getDescription() = 0;
+	virtual ~Trip()
+	{
+		delete[] description;
+		delete[] destination;
+	}
 
-    void setPrice(float newPrice) { price = newPrice; }
-    void setDistance(int newDistance) { distance = newDistance; }
-    void setDescription(const char* newDescription) { setString(description, newDescription); }
-    void setDestination(const char* newDestination) { setString(destination, newDestination); }
+public:
+	const char* getDescription() const { return description; }
+	const char* getDestination() const { return destination; }
+	float getPrice() const { return price; }
+	int getDistance() const { return distance; }
+
+	void setPrice(float newPrice) { price = newPrice; }
+	void setDistance(int newDistance) { distance = newDistance; }
+	void setDescription(const char* newDescription) { setString(description, newDescription); }
+	void setDestination(const char* newDestination) { setString(destination, newDestination); }
 
 protected:
-    void setString(char*& dest, const char* source)
-    {
-        delete[] dest;
-        dest = new char[strlen(source) + 1];
-        strcpy(dest, source);
-    }
+	void setString(char*& dest, const char* source)
+	{
+		if (source)
+		{
+			delete[] dest;
+			dest = new char[strlen(source) + 1];
+			strcpy(dest, source);
+		}
+	}
 
     void copyFrom(const Trip& other)
     {
