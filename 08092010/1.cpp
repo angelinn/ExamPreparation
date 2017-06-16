@@ -43,232 +43,254 @@ protected:
 		}
 	}
 
-    void copyFrom(const Trip& other)
-    {
-        setDescription(other.description);
-        setDestination(other.destination);
+	void copyFrom(const Trip& other)
+	{
+		setDescription(other.description);
+		setDestination(other.destination);
 
-        distance = other.distance;
-        price = other.price;
-    }
+		distance = other.distance;
+		price = other.price;
+	}
 
 protected:
-    char* description;
-    char* destination;
-    int distance;
-    float price;
+	char* description;
+	char* destination;
+	int distance;
+	float price;
 };
 
 class BusTrip : public Trip
 {
 public:
-    BusTrip() : deliverer(nullptr)
-    {  }
+	BusTrip() : deliverer(nullptr)
+	{  }
 
-    BusTrip(const BusTrip& other) : Trip(other), deliverer(nullptr)
-    {
-        copyFrom(other);
-    }
+	BusTrip(const BusTrip& other) : Trip(other), deliverer(nullptr)
+	{
+		copyFrom(other);
+	}
 
-    BusTrip& operator=(const BusTrip& other)
-    {
-        if (this != &other)
-        {
-            Trip::copyFrom(other);
-            copyFrom(other);
-        }
+	BusTrip& operator=(const BusTrip& other)
+	{
+		if (this != &other)
+		{
+			Trip::copyFrom(other);
+			copyFrom(other);
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~BusTrip()
-    {
-        delete[] deliverer;
-    }
-
-public:
-    const char* getDeliverer() const { return deliverer; }
-    void setDeliverer(const char* newDeliverer) { setString(deliverer, newDeliverer); }
+	~BusTrip()
+	{
+		delete[] deliverer;
+	}
 
 public:
-    virtual BusTrip* clone() const
-    {
-        return new BusTrip(*this);
-    }
+	const char* getDeliverer() const { return deliverer; }
+	void setDeliverer(const char* newDeliverer) { setString(deliverer, newDeliverer); }
 
-    virtual const char* getDescription()
-    {
-        description = new char[512];
-        sprintf(description, "Пътуване %d км до %s на цена %f лв. с автобус на фирма %s", distance, destination, price, deliverer);
-        return description;
-    }
+public:
+	virtual BusTrip* clone() const
+	{
+		return new BusTrip(*this);
+	}
 
-private:
-    void copyFrom(const BusTrip& other)
-    {
-        setString(deliverer, other.deliverer);
-    }
+	virtual const char* getDescription()
+	{
+		description = new char[512];
+		sprintf(description, "Пътуване %d км до %s на цена %f лв. с автобус на фирма %s", distance, destination, price, deliverer);
+		return description;
+	}
 
 private:
-    char* deliverer;   
+	void copyFrom(const BusTrip& other)
+	{
+		setString(deliverer, other.deliverer);
+	}
+
+private:
+	char* deliverer;
 };
 
 class PlaneFlight : public Trip
 {
 public:
-    const char* getFlight() const { return flight; }
-    void setFlight(const char* newFlight)
-    {
-        if (strlen(newFlight) > 7)
-            return;
+	PlaneFlight()
+	{
 
-        strcpy(flight, newFlight);
-    }
-    
+
+	}
+
+	PlaneFlight(const PlaneFlight& other) : Trip(other)
+	{
+		strcpy(flight, other.flight);
+	}
+
 public:
-    virtual PlaneFlight* clone() const
-    {
-        return new PlaneFlight(*this);
-    }
+	const char* getFlight() const { return flight; }
+	void setFlight(const char* newFlight)
+	{
+		if (strlen(newFlight) > 7)
+			return;
 
-    virtual const char* getDescription()
-    {
-        description = new char[512];
-        sprintf(description, "Пътуване %d км до %s на цена %f лв. с полет %s", distance, destination, price, flight);
-        return description;
-    }
+		strcpy(flight, newFlight);
+	}
+
+public:
+	virtual PlaneFlight* clone() const
+	{
+		return new PlaneFlight(*this);
+	}
+
+	virtual const char* getDescription()
+	{
+		description = new char[512];
+		sprintf(description, "Пътуване %d км до %s на цена %f лв. с полет %s", distance, destination, price, flight);
+		return description;
+	}
 
 private:
-    char flight[8];
+	char flight[8];
 };
 
 class Tour : public Trip
 {
 public:
-    Tour() : trips(nullptr)
-    {   }
+	Tour() : trips(nullptr)
+	{   }
 
-    Tour(const Tour& other) : Trip(other), trips(nullptr)
-    {
-        copyFrom(other);
-    }
+	Tour(const Tour& other) : Trip(other), trips(nullptr)
+	{
+		copyFrom(other);
+	}
 
-    Tour& operator=(const Tour& other)
-    {
-        if (this != &other)
-        {
-            Trip::copyFrom(other);
-            copyFrom(other);
-        }
+	Tour& operator=(const Tour& other)
+	{
+		if (this != &other)
+		{
+			Trip::copyFrom(other);
+			copyFrom(other);
+		}
 
-        return *this;
-    }
+		return *this;
+	}
 
-    ~Tour()
-    {
-        for (size_t i = 0; i < tripCount; ++i)
-            delete trips[i];
-
-        delete[] trips;
-    }
+	~Tour()
+	{
+		free();
+	}
 
 public:
-    Trip** getTrips() { return trips ;}
-    void setTrips(Trip** newTrips, size_t size)
-    {
-        tripCount = size;
-        trips = new Trip*[size];
+	Trip** getTrips() { return trips; }
+	void setTrips(Trip** newTrips, size_t size)
+	{
+		tripCount = size;
+		trips = new Trip*[size];
 
-        for (size_t i = 0; i < size; ++i)
-            trips[i] = newTrips[i]->clone();
-    }
+		for (size_t i = 0; i < size; ++i)
+			trips[i] = newTrips[i]->clone();
+	}
 
 public:
-    Tour sliceTour(char const* start, char const* end)
-    {
-        int startIndex = -1;
-        for (int i = 0; i < tripCount; ++i)
-        {
-            if (strcmp(trips[i]->getDestination(), start) == 0)
-            {
-                startIndex = i + 1;
-                break;
-            }
-        }
+	Tour sliceTour(char const* start, char const* end)
+	{
+		int startIndex = -1;
+		for (int i = 0; i < tripCount; ++i)
+		{
+			if (strcmp(trips[i]->getDestination(), start) == 0)
+			{
+				startIndex = i + 1;
+				break;
+			}
+		}
 
-        Tour newTour;
+		Tour newTour;
 
-        if (startIndex == -1)
-            return newTour;
+		if (startIndex == -1)
+			return newTour;
 
-        int endIndex = -1;
-        for (int j = startIndex; j < tripCount; ++j)
-        {
-            if (strcmp(trips[j]->getDestination(), end) == 0)
-            {
-                endIndex = j;
-                break;
-            }
-        }
+		int endIndex = -1;
+		for (int j = startIndex; j < tripCount; ++j)
+		{
+			if (strcmp(trips[j]->getDestination(), end) == 0)
+			{
+				endIndex = j;
+				break;
+			}
+		}
 
-        if (endIndex == -1)
-            return newTour;
-        
-        newTour.setTrips(trips + startIndex, endIndex - startIndex);
-        return newTour;
-    }
+		if (endIndex == -1)
+			return newTour;
 
-    void priceReport()
-    {
-        for (int i = 0; i < tripCount - 1; ++i)
-        {
-            int maxIndex = i;
-            for (int j = i + 1; j < tripCount; ++j)
-            {
-                if (trips[maxIndex]->getPrice() / trips[maxIndex]->getDistance() < trips[j]->getPrice() / trips[j]->getDistance())
-                    maxIndex = j;
-            }
+		newTour.setTrips(trips + startIndex, endIndex - startIndex + 1);
+		return newTour;
+	}
 
-            Trip* temporary = trips[i];
-            trips[i] = trips[maxIndex];
-            trips[maxIndex] = temporary;
-        }
+	void priceReport()
+	{
+		for (int i = 0; i < tripCount - 1; ++i)
+		{
+			int maxIndex = i;
+			for (int j = i + 1; j < tripCount; ++j)
+			{
+				if (trips[maxIndex]->getPrice() / trips[maxIndex]->getDistance() < trips[j]->getPrice() / trips[j]->getDistance())
+					maxIndex = j;
+			}
 
-        for (int i = 0; i < tripCount; ++i) 
+			Trip* temporary = trips[i];
+			trips[i] = trips[maxIndex];
+			trips[maxIndex] = temporary;
+		}
+
+
+		for (int i = 0; i < tripCount; ++i)
 			printf("[%d] - %s\n", i, trips[i]->getDescription());
-    }
+	}
 
 public:
-    virtual Tour* clone() const
-    {
-        return new Tour(*this);
-    }
+	virtual Tour* clone() const
+	{
+		return new Tour(*this);
+	}
 
-    virtual const char* getDescription()
-    {
-        for (int i = 0; i < tripCount; ++i)
-        {
-            price += trips[i]->getPrice();
-            distance += trips[i]->getDistance();
-        }
+	virtual const char* getDescription()
+	{
+		for (int i = 0; i < tripCount; ++i)
+		{
+			price += trips[i]->getPrice();
+			distance += trips[i]->getDistance();
+		}
 
-        description = new char[512];
-        sprintf(description, "Обща дължина %d км на цена %f лв.", distance, price);
+		description = new char[512];
+		sprintf(description, "Обща дължина %d км на цена %f лв.", distance, price);
 
-        return description;
-    }
-
-private:
-    void copyFrom(const Tour& other)
-    {
-        Trip::copyFrom(other);
-
-        tripCount = other.tripCount; 
-        for (size_t i = 0; i < other.tripCount; ++i)
-            trips[i] = other.trips[i]->clone();   
-    }
+		return description;
+	}
 
 private:
-    Trip** trips;
-    size_t tripCount;
+	void copyFrom(const Tour& other)
+	{
+		free();
+		trips = new Trip*[other.tripCount];
+		tripCount = other.tripCount;
+
+		for (size_t i = 0; i < other.tripCount; ++i)
+			trips[i] = other.trips[i]->clone();
+	}
+
+	void free()
+	{
+		if (trips)
+		{
+			for (size_t i = 0; i < tripCount; ++i)
+				delete trips[i];
+
+			delete[] trips;
+		}
+	}
+
+private:
+	Trip** trips;
+	size_t tripCount;
 };
