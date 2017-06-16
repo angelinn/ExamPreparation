@@ -231,7 +231,7 @@ public:
 
             Trip* temporary = trips[i];
             trips[i] = trips[maxIndex];
-            trips[maxIndex] = trips[i];
+            trips[maxIndex] = temporary;
             
             printf("[%d] - %s\n", i, trips[i]->getDescription());
         }
