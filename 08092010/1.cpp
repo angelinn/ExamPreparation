@@ -220,7 +220,7 @@ public:
 
     void priceReport()
     {
-        for (int i = 0; i < tripCount; ++i)
+        for (int i = 0; i < tripCount - 1; ++i)
         {
             int maxIndex = i;
             for (int j = i + 1; j < tripCount; ++j)
@@ -232,9 +232,10 @@ public:
             Trip* temporary = trips[i];
             trips[i] = trips[maxIndex];
             trips[maxIndex] = temporary;
-            
-            printf("[%d] - %s\n", i, trips[i]->getDescription());
         }
+
+        for (int i = 0; i < tripCount; ++i) 
+			printf("[%d] - %s\n", i, trips[i]->getDescription());
     }
 
 public:
