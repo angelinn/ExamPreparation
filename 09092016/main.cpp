@@ -1,5 +1,18 @@
 #include "1.cpp"
-#include "2.cpp"
+// #include "2.cpp"
+#include "2_smart.cpp"
+
+
+void printTree(Node* root)
+{
+    printf("%d - [", root->data);
+    while (root->children)
+    {
+        printTree(root->children);
+        root->children = root->children->next;
+    }
+    printf("] ");
+}
 
 int main()
 {
