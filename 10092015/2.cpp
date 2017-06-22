@@ -26,8 +26,8 @@ int** reverseGraph(int** g, size_t N)
 		rg[i] = new int[N];
 
 	bool** visited = new bool*[N];
-    for (size_t i = 0; i < N; ++i)
-        visited[i] = new bool[N] { false };
+	for (size_t i = 0; i < N; ++i)
+		visited[i] = new bool[N] { false };
 
 	for (size_t i = 0; i < N; ++i)
 	{
@@ -35,8 +35,8 @@ int** reverseGraph(int** g, size_t N)
 		{
 			if (g[i][j] && !visited[i][j])
 			{
-                visited[i][j] = true;
-                visited[j][j] = true;
+				visited[i][j] = true;
+				visited[j][i] = true;
 
 				rg[j][i] = g[i][j];
 				g[i][j] = 0;
@@ -44,9 +44,9 @@ int** reverseGraph(int** g, size_t N)
 		}
 	}
 
-    for (size_t i = 0; i < N; ++I)
-        delete[] visited[i];
-        
+	for (size_t i = 0; i < N; ++i)
+		delete[] visited[i];
+
 	delete[] visited;
 	return rg;
 }
@@ -72,13 +72,13 @@ bool isConnected(int** g, size_t N, bool reversed = false)
 		return connected;
 
 	int** newGraph = reverseGraph(g, N);
-    for (int i = 0; i < N; ++i)
-    {
-        for (int j = 0; j < N; ++j)
-            printf("[%d][%d] = %d\n", i, j, newGraph[i][j]);
-        printf("\n");
-    }
-        
+	for (int i = 0; i < N; ++i)
+	{
+		for (int j = 0; j < N; ++j)
+			printf("[%d][%d] = %d\n", i, j, newGraph[i][j]);
+		printf("\n");
+	}
+
 	if (!isConnected(newGraph, N, true))
 		return false;
 
