@@ -1,4 +1,5 @@
 #include "2.cpp"
+#include "1.cpp"
 
 const int N = 5;
 
@@ -22,4 +23,9 @@ int main()
 	players[1] = new SeaMonster(Point(2, 1));
 
 	allMoves(players, 2);
+
+	float X[] = { 1, 2, 3, 4, 5, 8, 11 };
+	float Y[] = { 6, 2, 4, 2, 9, 1, 3 };
+
+	square(7, X, Y);
 }
