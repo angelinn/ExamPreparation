@@ -13,11 +13,12 @@
 #include <cstdio>
 
 const int N = 3;
+const int GROUPS_COUNT = 4;
 
 void meanSymmetric(int A[][N])
 {
-    int sums[4] { 0 };
-    int means[4] { 0 };
+    int sums[GROUPS_COUNT] { 0 };
+    int means[GROUPS_COUNT] { 0 };
 
     for (int i = 0; i < N; ++i)
     {
@@ -27,15 +28,8 @@ void meanSymmetric(int A[][N])
         sums[3] += A[i][N - 1 - i];
     }
     
-    sums[0] -= A[N / 2][N / 2];
-    sums[1] -= A[N / 2][N / 2];
-    sums[2] -= A[N / 2][N / 2];
-    sums[3] -= A[N / 2][N / 2];
-    
-    means[0] = sums[0] / (N - 1);
-    means[1] = sums[1] / (N - 1);
-    means[2] = sums[2] / (N - 1);
-    means[3] = sums[3] / (N - 1);
+    for (int i = 0; i < GROUPS_COUNT; ++i)
+        means[i] = (sums[i] - A[N / 2][N / 2]) / (N - 1);
 
     for (int i = 0; i < N; ++i)
     {
