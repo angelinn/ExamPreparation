@@ -19,6 +19,7 @@ void meanSymmetric(int A[][N])
 {
     int sums[GROUPS_COUNT] { 0 };
     int means[GROUPS_COUNT] { 0 };
+    int center = A[N / 2][N / 2];
 
     for (int i = 0; i < N; ++i)
     {
@@ -27,18 +28,17 @@ void meanSymmetric(int A[][N])
         sums[2] += A[i][N / 2];
         sums[3] += A[i][N - 1 - i];
     }
-    
+
     for (int i = 0; i < GROUPS_COUNT; ++i)
-        means[i] = (sums[i] - A[N / 2][N / 2]) / (N - 1);
+        means[i] = (sums[i] - center) / (N - 1);
 
     for (int i = 0; i < N; ++i)
     {
-        if (i != N / 2)
-        {
-            A[i][i] = means[0];
-            A[N / 2][i] = means[1];
-            A[i][N / 2] = means[2];
-            A[i][N - 1 - i] = means[3];
-        }
+        A[i][i] = means[0];
+        A[N / 2][i] = means[1];
+        A[i][N / 2] = means[2];
+        A[i][N - 1 - i] = means[3];
     }
+
+    A[N / 2][N / 2] = center;
 }
