@@ -23,7 +23,7 @@ int** reverseGraph(int** g, size_t N)
 {
 	int** rg = new int*[N];
 	for (size_t i = 0; i < N; ++i)
-		rg[i] = new int[N];
+		rg[i] = new int[N] { 0 };
 
 	bool** visited = new bool*[N];
 	for (size_t i = 0; i < N; ++i)
