@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE phonebook [
+<!ELEMENT phonebook (entry*)>
+<!ELEMENT entry (person, address)>
+
+<!ELEMENT person (firstName, middleName, lastName, phones?)>
+<!ATTLIST person birthdate NMTOKEN #REQUIRED>
+<!ATTLIST person relationship (family|collegue|friend) #REQUIRED>
+
+<!ELEMENT firstName (#PCDATA) >
+<!ELEMENT middleName (#PCDATA) >
+<!ELEMENT lastName (#PCDATA) >
+
+<!ELEMENT phones (phone+)>
+<!ELEMENT phone (#PCDATA) >
+<!ATTLIST phone type (home|work) #REQUIRED>
+
+<!ELEMENT address (city, streetName, streetNumber)>
+<!ELEMENT city (#PCDATA) >
+<!ELEMENT streetName (#PCDATA) >
+<!ELEMENT streetNumber (#PCDATA) >
+
+<!ATTLIST address postCode NMTOKEN #REQUIRED>
+
+]>
+
+<phonebook>
+	<entry>
+		<person birthdate="1994" relationship="friend">
+			<firstName>John</firstName>
+			<middleName>Peter</middleName>
+			<lastName>Smith</lastName>
+			
+			<phones>
+				<phone type="home">12312312312312</phone>
+			</phones>
+		</person>
+		
+		<address postCode=" 1619">
+			<city>Sofia</city>
+			<streetName>Vitoshka</streetName>
+			<streetNumber>69</streetNumber>
+		</address>
+	</entry>
+	
+	<entry>
+		<person birthdate="1994" relationship="friend">
+			<firstName>John</firstName>
+			<middleName>Peter</middleName>
+			<lastName>Smith</lastName>
+		</person>
+		
+		<address postCode=" 1619">
+			<city>Sofia</city>
+			<streetName>Vitoshka</streetName>
+			<streetNumber>69</streetNumber>
+		</address>
+	</entry>
+</phonebook>
